@@ -176,7 +176,7 @@ abstract class sfPHPUnitFunctionalTestCase extends myUnitTestCase
      * @param  $user
      * @return $user
      */
-    protected function authenticateUser($user = null)
+    protected function authenticateUser(sfGuardUser $user = null)
     {
         if (!$user) {
             $user = $this->helper->makeUser();
