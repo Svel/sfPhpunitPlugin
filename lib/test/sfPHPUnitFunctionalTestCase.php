@@ -93,16 +93,24 @@ abstract class sfPHPUnitFunctionalTestCase extends myUnitTestCase
         $className = get_class($e);
 
         if ($e instanceof PHPUnit_Framework_ExpectationFailedException) {
-            if (!$e->getCustomMessage()) {
-                return new $className(
-                    $this->_makeRequestErrorMessage($e->getDescription(), $e) . PHP_EOL,
-                    $e->getComparisonFailure()
-                );
+            if (version_compare('3.5.14', PHPUnit_Runner_Version::id()) >= 0) {
+                if (!$e->getCustomMessage()) {
+                    return new $className(
+                        $this->_makeRequestErrorMessage($e->getDescription(), $e) . PHP_EOL,
+                        $e->getComparisonFailure()
+                    );
+                } else {
+                    return new $className(
+                        $e->getDescription(),
+                        $e->getComparisonFailure(),
+                        $this->_makeRequestErrorMessage($e->getCustomMessage(), $e) . PHP_EOL
+                    );
+                }
+            // у версий 3.6+ нет методов getCustomMessage / getDescription
             } else {
                 return new $className(
-                    $e->getDescription(),
-                    $e->getComparisonFailure(),
-                    $this->_makeRequestErrorMessage($e->getCustomMessage(), $e) . PHP_EOL
+                    $this->_makeRequestErrorMessage($e->getMessage(), $e) . PHP_EOL,
+                    $e->getComparisonFailure()
                 );
             }
 
