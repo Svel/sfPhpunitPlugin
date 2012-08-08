@@ -246,6 +246,8 @@ abstract class sfPHPUnitTestCase extends PHPUnit_Framework_TestCase
             $column = $table->getFieldName($column);
             if (null === $condition) {
                 $query->andWhere("a.{$column} IS NULL");
+            } elseif (is_array($condition)) {
+                $query->andWhereIn("a.{$column}", $condition);
             } else {
                 $query->andWhere("a.{$column} = ?", $condition);
             }
